@@ -1,0 +1,344 @@
+import React from "react";
+import { connect } from "react-redux";
+import { Field, reduxForm } from "redux-form";
+import { load as loadAccount } from "./account";
+
+import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+const data = {
+  // used to populate "account" reducer when "Load" is clicked
+  person: {
+    firstName: "Jane",
+    lastName: "Doe",
+    age: "42",
+    sex: "female",
+    employed: true,
+    favoriteColor: "Blue",
+    bio: "Born to write amazing Redux code."
+  }
+};
+const colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"];
+
+const required = (value: string) => (value ? undefined : "Required");
+const maxLength = (max: number) => (value: string) =>
+  value && value.length > max ? `Must be ${max} characters or less` : undefined;
+const maxLength15 = maxLength(15);
+export const minLength = (min: number) => (value: string) =>
+  value && value.length < min ? `Must be ${min} characters or more` : undefined;
+export const minLength2 = minLength(2);
+/*const number = value =>
+  value && isNaN(Number(value)) ? 'Must be a number' : undefined
+const minValue = min => value =>
+  value && value < min ? `Must be at least ${min}` : undefined
+const minValue18 = minValue(18)
+const email = value =>
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+    ? 'Invalid email address'
+    : undefined
+const tooOld = value =>
+  value && value > 65 ? 'You might be too old for this' : undefined
+const aol = value =>
+  value && /.+@aol\.com/.test(value)
+    ? 'Really? You still use AOL for your email?'
+    : undefined
+const alphaNumeric = value =>
+  value && /[^a-zA-Z0-9 ]/i.test(value)
+    ? 'Only alphanumeric characters'
+    : undefined */
+export const phoneNumber = (value: string) =>
+  value && !/^(0|[1-9][0-9]{9})$/i.test(value)
+    ? "Invalid phone number, must be 10 digits"
+    : undefined;
+
+const renderTextField = (
+  label: string,
+  input: string,
+  meta: { touched: Boolean; invalid: Boolean; error: Boolean },
+  ...custom: any
+) => (
+  <TextField
+    label={label}
+    placeholder={label}
+    error={meta.touched && meta.invalid}
+    helperText={meta.touched && meta.error}
+    {...input}
+    {...custom}
+  />
+);
+
+const renderCheckbox = (input: any, label: string) => (
+  <div>
+    <FormControlLabel
+      control={
+        <Checkbox
+          checked={input.value ? true : false}
+          onChange={input.onChange}
+        />
+      }
+      label={label}
+    />
+  </div>
+);
+
+const radioButton = (input: string, ...rest: any) => (
+  <FormControl>
+    <RadioGroup {...input} {...rest}>
+      <FormControlLabel value="female" control={<Radio />} label="Female" />
+      <FormControlLabel value="male" control={<Radio />} label="Male" />
+    </RadioGroup>
+  </FormControl>
+);
+
+const renderFromHelper = (touched: Boolean, error: Boolean) => {
+  if (!(touched && error)) {
+    return;
+  } else {
+    return <FormHelperText>{touched && error}</FormHelperText>;
+  }
+};
+
+const renderSelectField = (
+  input: string,
+  label: string,
+  meta: { touched: Boolean; error: any },
+  children: any,
+  ...custom: any
+) => (
+  <FormControl error={meta.touched && meta.error}>
+    <Select
+      native
+      {...input}
+      {...custom}
+      inputProps={{
+        name: "age",
+        id: "age-native-simple"
+      }}
+    >
+      {children}
+    </Select>
+    {renderFromHelper(meta.touched, meta.error)}
+  </FormControl>
+);
+
+class RegisterForm extends React.Component {
+
+  
+  state = {
+    open: false
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleSubmit = () => {
+    this.setState({ open: false });
+  };
+
+  componentDidMount() {
+    this.handleClickOpen(); //called button onclick event here
+  }
+
+ 
+  //render() {var abc; return ({ return abc})}
+
+  render()
+  
+   {
+     var initializeFromState = function(props: any) {
+       const { handleSubmit, load, pristine, reset, submitting } = props;
+     };
+
+
+
+     return (
+       
+       <div>  
+         <Dialog
+           open={this.state.open}
+           onClose={this.handleClose}
+           aria-labelledby="alert-dialog-title"
+           aria-describedby="alert-dialog-description"
+           disableBackdropClick={true}
+         >
+           <DialogTitle id="alert-dialog-title">
+             {"Use Google's location service?"}
+           </DialogTitle>
+           <DialogContent>
+             <DialogContentText id="alert-dialog-description">
+               Let Google help apps determine location. This means sending
+               anonymous location data to Google, even when no apps are running.
+             </DialogContentText>
+           </DialogContent>
+           <DialogActions>
+             <form onSubmit={this.handleSubmit}>
+               <div>
+                 <button type="button" onClick={() => loadAccount(data)}>
+                   Load Account
+                 </button>
+               </div>
+               <div>
+                 <label>First Name</label>
+                 
+               </div>
+               <div>
+                 <label>Last Name</label>
+                 <div>
+                   <Field
+                     name="person.lastName"
+                     component={renderTextField}
+                     type="text"
+                     placeholder="Last Name"
+                   />
+                 </div>
+               </div>
+               <div>
+                 <label>Age</label>
+                 <div>
+                   <Field
+                     name="person.age"
+                     component={renderTextField}
+                     type="number"
+                     placeholder="Age"
+                   />
+                 </div>
+               </div>
+               <div>
+                 <label>Sex</label>
+                 <div>
+                   <Field name="person.sex" component={radioButton}>
+                     <Radio value="male">male</Radio>
+                     <Radio value="female">female</Radio>
+                   </Field>
+                 </div>
+               </div>
+               <div>
+                 <label>Favorite Color</label>
+                 <div>
+                   <Field
+                     name="person.favoriteColor"
+                     component={renderSelectField}
+                   >
+                     <option value="">Select a color...</option>
+                     {colors.map(colorOption => (
+                       <option value={colorOption} key={colorOption}>
+                         {colorOption}
+                       </option>
+                     ))}
+                   </Field>
+                 </div>
+               </div>
+               <div>
+                 <label htmlFor="employed">Employed</label>
+                 <div>
+                   <Field
+                     name="person.employed"
+                     id="employed"
+                     component={renderCheckbox}
+                     type="checkbox"
+                   />
+                 </div>
+               </div>
+               <div>
+                 <div>
+                   <Field
+                     name="person.bio"
+                     component={renderTextField}
+                     label="Notes"
+                     multiline
+                     rowsMax="4"
+                     margin="normal"
+                   />
+                 </div>
+               </div>
+               <div>
+                 <button type="submit" disabled={pristine || submitting}>
+                   Submit
+                 </button>
+                 <button
+                   type="button"
+                   disabled={pristine || submitting}
+                   onClick={reset}
+                 >
+                   Undo Changes
+                 </button>
+               </div>
+             </form>
+             <Button onClick={this.handleClose} color="primary">
+               Disagree
+             </Button>
+             <Button onClick={this.handleClose} color="primary" autoFocus>
+               Agree
+             </Button>
+           </DialogActions>
+         </Dialog>
+       </div>
+     );
+   }
+}
+
+
+// Decorate with reduxForm(). It will read the initialValues prop provided by connect()
+InitializeFromStateForm = reduxForm({
+  form: "initializeFromState"
+  //validate
+});
+
+// You have to connect() to any reducers that you wish to connect to yourself
+InitializeFromStateForm = connect(
+  (state: any): any => ({
+    initialValues: state.account.data // pull initial values from account reducer
+  }),
+  { load: loadAccount } // bind account loading action creator
+)(InitializeFromStateForm)
+
+
+
+export default RegisterForm
+
+/* const validate = val => {
+  const errors = {};
+  if (!val.firstName) {
+    console.log("First Name is required");
+    errors.firstName = "Required";
+  }
+  if (!val.lastName) {
+    console.log("Last Name is required");
+    errors.lastName = "Required";
+  }
+  if (!val.email) {
+    console.log("email is required");
+    errors.email = "Required";
+  } else if (!/^.+@.+$/i.test(val.email)) {
+    console.log("email is invalid");
+    errors.email = "Invalid email address";
+  }
+  if (!val.age) {
+    errors.age = "Required";
+  } else if (isNaN(Number(val.age))) {
+    errors.age = "Must be a number";
+  } else if (Number(val.age) < 18) {
+    errors.age = "Sorry, you must be at least 18 years old";
+  }
+  return errors;
+}; */
+
+

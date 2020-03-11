@@ -1,0 +1,14 @@
+npx create-react-app contact-redux
+
+or
+
+npx create-react-app my-app --template typescript
+
+
+npm install --save redux react-redux redux-form
+
+npm install @material-ui/core
+
+npm install --save react-router-dom
+npm install --save react-redux
+npm install @material-ui/icons
