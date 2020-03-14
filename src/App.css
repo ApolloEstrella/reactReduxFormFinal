@@ -54,9 +54,10 @@ li {
   color: black;
 }
  
-.form {
-  
-  text-align: center;
+.TabPanel {
+  background-color: black;
+  width: 25%;
+  margin-top: 25px;
 }
 
 

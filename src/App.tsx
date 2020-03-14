@@ -8,11 +8,15 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
-import MaterialUiForm from "./MaterialUiForm";
+//import MaterialUiForm from "./MaterialUiForm";
 import showResults from './showResults'
 import modalform from "./modalform.js";
 import RegisterForm from "./modalform.js";
-//import InitializeFromStateForm from "./InitializeFromStateForm";
+//import InitializeFromStateForm from "./InitializeFromStateForm";'
+
+import TabPanel from "./component/subscriber/subscriberTab"
+import color from "@material-ui/core/colors/yellow";
+import { yellow } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,13 +27,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const style = {
+
+  background : "blue"
+};
+
 export default function DenseAppBar() {
   const classes = useStyles();
 
   return (
     <Router>
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" style={style}>
         <Toolbar variant="dense">
           <IconButton
             edge="start"
@@ -40,7 +49,7 @@ export default function DenseAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            SSC
           </Typography>
           <div className={classes.root}>
            
@@ -121,10 +130,18 @@ function About() {
   );
 }
 
-function Dashboard() {
+/* function Dashboard() {
   return (
     <div className="form">
         <MaterialUiForm   />
+    </div>
+  );
+} */
+
+function Dashboard() {
+  return (
+    <div className="TabPanel">
+        <TabPanel   />
     </div>
   );
 }

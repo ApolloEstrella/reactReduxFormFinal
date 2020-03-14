@@ -20,10 +20,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle"; */
 
 import { connect } from "react-redux";
-import { addPost, ADD_POST } from "./action/actions";
-import { createStore } from "./store";
+import { addPost, ADD_POST } from "../../action/actions";
+/* import { createStore } from "./store";
 import submitNow from "./submit";
-import accountReducer from "./account";
+import accountReducer from "./account"; */
+
+
 
 const required = value =>
   value || typeof value === "number" ? undefined : "Required";
@@ -139,25 +141,39 @@ const renderSelectField = ({
   </FormControl>
 );
 
+
 var MaterialUiForm = props => {
-  const { pristine, reset, submitting, classes, valid, dispatch } = props;
+  const { handleSubmit, pristine, reset, submitting, classes, valid, dispatch } = props;
 
-  const handleSubmits = event => {
-    event.preventDefault();
+   const submit = values => {
+    //.preventDefault();
 
-    dispatch({
+    /* dispatch({
       type: ADD_POST,
       payload: {
-        prop: "firstName",
-        value: document.getElementById("person.firstName").value
+        person: values         
       }
-    });
+    }); */
+
+    dispatch(addPost(values))
+
+
+
   };
 
   //alert(props.person.firstName)
 
   return (
-    <form onSubmit={handleSubmits}>    
+    <form onSubmit={handleSubmit(submit)}> 
+    <div>
+        <Field
+          id="person[id]"
+          name="person[id]"
+          component={renderTextField}
+          label="id"
+          
+        />
+      </div>   
       <div>
         <Field
           id="person.firstName"
@@ -254,14 +270,14 @@ var MaterialUiForm = props => {
       <div>
         <ul>
           {props.memberList.map(member => (
-            <li>{member}</li>
+            <li key={member.id}>{member.id}-{member.firstName}</li>
           ))}
         </ul>
       </div>
     </form>
   );
 };
-
+ 
 const mapStateToProps = state => {
   return {
     person: state.accountReducer.person,
@@ -278,7 +294,8 @@ const mapDispatchToProps = dispatch => {
 MaterialUiForm = connect(mapStateToProps, mapDispatchToProps)(MaterialUiForm);
 
 export default reduxForm({
-  form: "MaterialUiForm" //,
+  form: "MaterialUiForm",
+  initialValues: {person: {id: 1}} //,
   //onSubmit: {handleSubmit}
   //, // a unique identifier for this form
   //validate
