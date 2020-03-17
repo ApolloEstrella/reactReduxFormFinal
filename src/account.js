@@ -3,7 +3,6 @@ import useState from "react-hook-use-state";
 // Quack! This is a duck. https://github.com/erikras/ducks-modular-redux
 const LOAD = "redux-form-examples/account/LOAD";
 
- 
 const initialState = {
   person: {
     id: 0,
@@ -21,10 +20,12 @@ const initialState = {
 };
 
 const accountReducer = (state = initialState, action) => {
+  if (action.type === LOAD) {
+    return { personInfo: action.personInfo, memberList: state.memberList };
+  }
+
   if (action.type === "ADD_POST") {
-
-
-  /*  var w = Object.assign({}, state, {
+    /*  var w = Object.assign({}, state, {
       person: action.person
     });
 
@@ -38,7 +39,7 @@ const accountReducer = (state = initialState, action) => {
       }
     }; 
 */
-    var member = {...action.person.person, id: action.counterId}
+    var member = {person: { ...action.person.person, id: action.counterId }};
 
     return Object.assign({}, state, {
       memberList: state.memberList.concat(member)
@@ -75,5 +76,5 @@ const accountReducer = (state = initialState, action) => {
  * Simulates data loaded into this reducer from somewhere
  */
 //export const load = (data: any) => ({ type: LOAD, data })
-
+export const load = personInfo => ({ type: LOAD, personInfo });
 export default accountReducer;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, reduxForm, Form, submit } from "redux-form";
+import { Field, reduxForm, Form, submit, reset } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -24,8 +24,7 @@ import { addPost, ADD_POST } from "../../action/actions";
 /* import { createStore } from "./store";
 import submitNow from "./submit";
 import accountReducer from "./account"; */
-
-
+import { load as loadAccount } from "../../account";
 
 const required = value =>
   value || typeof value === "number" ? undefined : "Required";
@@ -141,11 +140,33 @@ const renderSelectField = ({
   </FormControl>
 );
 
+const member = {
+  // used to populate "account" reducer when "Load" is clicked
+  person: {
+    id: 1,
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "pol@aol.com",
+    age: "42",
+    sex: "female",
+    employed: true,
+    favoriteColor: "0000ff",
+    notes: "Born to write amazing Redux code."
+  }
+};
 
 var MaterialUiForm = props => {
-  const { handleSubmit, pristine, reset, submitting, classes, valid, dispatch } = props;
+  const {
+    handleSubmit,
+    pristine,
+    submitting,
+    classes,
+    valid,
+    dispatch,
+    load
+  } = props;
 
-   const submit = values => {
+  const submit = values => {
     //.preventDefault();
 
     /* dispatch({
@@ -155,25 +176,32 @@ var MaterialUiForm = props => {
       }
     }); */
 
-    dispatch(addPost(values))
-
-
-
+    dispatch(addPost(values));
   };
 
   //alert(props.person.firstName)
 
+  const loadData = mem => {
+    dispatch(reset("initializeFromState"))
+    load(mem)
+    
+  };
+
   return (
-    <form onSubmit={handleSubmit(submit)}> 
-    <div>
+    <Form onSubmit={handleSubmit(submit)}>
+      <div>
+        <div>
+          <button type="button" onClick={() => loadData(member)}>
+            Load Account
+          </button>
+        </div>
         <Field
           id="person[id]"
           name="person[id]"
           component={renderTextField}
           label="id"
-          
         />
-      </div>   
+      </div>
       <div>
         <Field
           id="person.firstName"
@@ -269,15 +297,19 @@ var MaterialUiForm = props => {
       </div>
       <div>
         <ul>
-          {props.memberList.map(member => (
-            <li key={member.id}>{member.id}-{member.firstName}</li>
+          {props.memberList.map(mem => (
+            <li key={mem.person.id}>
+              <button type="button" onClick={() => loadData(mem)}>
+                {mem.person.id}-{mem.person.firstName}
+              </button>
+            </li>
           ))}
         </ul>
       </div>
-    </form>
+    </Form>
   );
 };
- 
+
 const mapStateToProps = state => {
   return {
     person: state.accountReducer.person,
@@ -293,11 +325,18 @@ const mapDispatchToProps = dispatch => {
 
 MaterialUiForm = connect(mapStateToProps, mapDispatchToProps)(MaterialUiForm);
 
-export default reduxForm({
-  form: "MaterialUiForm",
-  initialValues: {person: {id: 1}} //,
-  //onSubmit: {handleSubmit}
-  //, // a unique identifier for this form
-  //validate
-  //asyncValidate
+// Decorate with reduxForm(). It will read the initialValues prop provided by connect()
+MaterialUiForm = reduxForm({
+  form: "initializeFromState", // a unique identifier for this form
+  enableReinitialize: true
 })(MaterialUiForm);
+
+// You have to connect() to any reducers that you wish to connect to yourself
+MaterialUiForm = connect(
+  state => ({
+    initialValues: state.accountReducer.personInfo // pull initial values from account reducer
+  }),
+  { load: loadAccount } // bind account loading action creator
+)(MaterialUiForm);
+
+export default MaterialUiForm;
