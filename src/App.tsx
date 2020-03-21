@@ -18,6 +18,8 @@ import TabPanel from "./component/subscriber/subscriberTab"
 import color from "@material-ui/core/colors/yellow";
 import { yellow } from "@material-ui/core/colors";
 
+import SubscriberTab from "./component/subscriber/subscriberTab"
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
@@ -140,8 +142,8 @@ function About() {
 
 function Dashboard() {
   return (
-    <div className="TabPanel">
-        <TabPanel   />
+    <div>
+        <SubscriberTab />
     </div>
   );
 }

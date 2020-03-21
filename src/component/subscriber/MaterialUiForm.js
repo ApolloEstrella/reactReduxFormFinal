@@ -1,4 +1,5 @@
 import React from "react";
+import useState from "react-hook-use-state";
 import { Field, reduxForm, Form, submit, reset } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -25,6 +26,25 @@ import { addPost, ADD_POST } from "../../action/actions";
 import submitNow from "./submit";
 import accountReducer from "./account"; */
 import { load as loadAccount } from "../../account";
+
+import { Container, Row, Col } from "react-bootstrap";
+
+//import PropTypes from "prop-types";
+//import { makeStyles } from "@material-ui/core/styles";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+//import { FixedSizeList } from "react-window";
+
+/* const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+    height: 400,
+    maxWidth: 300,
+    backgroundColor: theme.palette.background.paper,
+  },
+})); */
+
+import Subscriber from "../subscriber/SubscriberList";
 
 const required = value =>
   value || typeof value === "number" ? undefined : "Required";
@@ -182,130 +202,126 @@ var MaterialUiForm = props => {
   //alert(props.person.firstName)
 
   const loadData = mem => {
-    dispatch(reset("initializeFromState"))
-    load(mem)
-    
+    dispatch(reset("initializeFromState"));
+    load(mem);
   };
+
+  //const class2 = useStyles();
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <div>
-        <div>
-          <button type="button" onClick={() => loadData(member)}>
-            Load Account
-          </button>
-        </div>
-        <Field
-          id="person[id]"
-          name="person[id]"
-          component={renderTextField}
-          label="id"
-        />
-      </div>
-      <div>
-        <Field
-          id="person.firstName"
-          name="person.firstName"
-          component={renderTextField}
-          label="First Name"
-          validate={[required, maxLength15, minLength2]}
-        />
-      </div>
-      <div>
-        <Field
-          name="person.lastName"
-          component={renderTextField}
-          label="Last Name"
-          validate={[required, maxLength15, minLength2]}
-        />
-      </div>
-      <div>
-        <Field
-          name="person.email"
-          component={renderTextField}
-          label="Email"
-          validate={[email, required]}
-        />
-      </div>
-      <div>
-        <Field
-          name="person.age"
-          type="number"
-          component={renderTextField}
-          label="Age"
-          validate={[required, number, minValue13]}
-          warn={tooYoung}
-        />
-      </div>
-      <div>
-        <Field name="person.sex" component={radioButton}>
-          <Radio value="male" label="male" />
-          <Radio value="female" label="female" />
-        </Field>
-      </div>
-      <div>
-        <Field
-          classes={classes}
-          name="person.favoriteColor"
-          component={renderSelectField}
-          label="Favorite Color"
-          validate={required}
-        >
-          <option value="" />
-          <option value={"ff0000"}>Red</option>
-          <option value={"00ff00"}>Green</option>
-          <option value={"0000ff"}>Blue</option>
-        </Field>
-      </div>
-      <div>
-        <Field
-          name="person.employed"
-          component={renderCheckbox}
-          label="Employed"
-        />
-      </div>
-      <div />
-      <div>
-        <Field
-          name="person.notes"
-          component={renderTextField}
-          label="Notes"
-          multiline
-          rowsMax="4"
-          margin="normal"
-        />
-      </div>
-      <div>
-        <Button
-          type="submit"
-          disabled={!valid || pristine || submitting}
-          variant="contained"
-          color="primary"
-        >
-          Submit
-        </Button>{" "}
-        &nbsp; &nbsp;
-        <Button
-          type="button"
-          disabled={pristine || submitting}
-          onClick={reset}
-          variant="contained"
-          color="primary"
-        >
-          Clear Values
-        </Button>
-      </div>
-      <div>
-        <ul>
-          {props.memberList.map(mem => (
-            <li key={mem.person.id}>
-              <button type="button" onClick={() => loadData(mem)}>
-                {mem.person.id}-{mem.person.firstName}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Container maxWidth="sm">
+        <Row>
+          <Col>
+            <div>
+              <div>
+                <button type="button" onClick={() => loadData(member)}>
+                  Load Account
+                </button>
+              </div>
+              <Field
+                id="person[id]"
+                name="person[id]"
+                component={renderTextField}
+                label="id"
+              />
+            </div>
+            <div>
+              <Field
+                id="person.firstName"
+                name="person.firstName"
+                component={renderTextField}
+                label="First Name"
+                validate={[required, maxLength15, minLength2]}
+              />
+            </div>
+            <div>
+              <Field
+                name="person.lastName"
+                component={renderTextField}
+                label="Last Name"
+                validate={[required, maxLength15, minLength2]}
+              />
+            </div>
+            <div>
+              <Field
+                name="person.email"
+                component={renderTextField}
+                label="Email"
+                validate={[email, required]}
+              />
+            </div>
+            <div>
+              <Field
+                name="person.age"
+                type="number"
+                component={renderTextField}
+                label="Age"
+                validate={[required, number, minValue13]}
+                warn={tooYoung}
+              />
+            </div>
+            <div>
+              <Field name="person.sex" component={radioButton}>
+                <Radio value="male" label="male" />
+                <Radio value="female" label="female" />
+              </Field>
+            </div>
+            <div>
+              <Field
+                classes={classes}
+                name="person.favoriteColor"
+                component={renderSelectField}
+                label="Favorite Color"
+                validate={required}
+              >
+                <option value="" />
+                <option value={"ff0000"}>Red</option>
+                <option value={"00ff00"}>Green</option>
+                <option value={"0000ff"}>Blue</option>
+              </Field>
+            </div>
+            <div>
+              <Field
+                name="person.employed"
+                component={renderCheckbox}
+                label="Employed"
+              />
+            </div>
+            <div />
+            <div>
+              <Field
+                name="person.notes"
+                component={renderTextField}
+                label="Notes"
+                multiline
+                rowsMax="4"
+                margin="normal"
+              />
+            </div>
+            <div>
+              <Button
+                type="submit"
+                disabled={!valid || pristine || submitting}
+                variant="contained"
+                color="primary"
+              >
+                Submit
+              </Button>{" "}
+              &nbsp; &nbsp;
+              <Button
+                type="button"
+                disabled={pristine || submitting}
+                onClick={reset}
+                variant="contained"
+                color="primary"
+              >
+                Clear
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </Form>
   );
 };

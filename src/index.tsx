@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import store from './store';
- 
+import 'bootstrap/dist/css/bootstrap.min.css'; 
  
 
 
