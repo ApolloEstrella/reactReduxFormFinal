@@ -24,6 +24,11 @@ const accountReducer = (state = initialState, action) => {
     return { personInfo: action.personInfo, memberList: state.memberList };
   }
 
+  if (action.type === "EDIT_POST") {
+    return { personInfo: action.personInfo, memberList: state.memberList };
+  }
+
+
   if (action.type === "ADD_POST") {
     /*  var w = Object.assign({}, state, {
       person: action.person

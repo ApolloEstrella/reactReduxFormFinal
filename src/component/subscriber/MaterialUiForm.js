@@ -175,7 +175,7 @@ const member = {
   }
 };
 
-var MaterialUiForm = props => {
+export var MaterialUiFormData = props => {
   const {
     handleSubmit,
     pristine,
@@ -201,7 +201,7 @@ var MaterialUiForm = props => {
 
   //alert(props.person.firstName)
 
-  const loadData = mem => {
+   const loadData = mem => {
     dispatch(reset("initializeFromState"));
     load(mem);
   };
@@ -339,20 +339,20 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-MaterialUiForm = connect(mapStateToProps, mapDispatchToProps)(MaterialUiForm);
+MaterialUiFormData = connect(mapStateToProps, mapDispatchToProps)(MaterialUiFormData);
 
 // Decorate with reduxForm(). It will read the initialValues prop provided by connect()
-MaterialUiForm = reduxForm({
+MaterialUiFormData = reduxForm({
   form: "initializeFromState", // a unique identifier for this form
   enableReinitialize: true
-})(MaterialUiForm);
+})(MaterialUiFormData);
 
 // You have to connect() to any reducers that you wish to connect to yourself
-MaterialUiForm = connect(
+MaterialUiFormData = connect(
   state => ({
     initialValues: state.accountReducer.personInfo // pull initial values from account reducer
   }),
   { load: loadAccount } // bind account loading action creator
-)(MaterialUiForm);
+)(MaterialUiFormData);
 
-export default MaterialUiForm;
+export default MaterialUiFormData;

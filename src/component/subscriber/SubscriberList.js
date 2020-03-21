@@ -15,6 +15,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import store from "../../store";
+import MaterialUiFormData from "../subscriber/MaterialUiForm";
 
 const useStyles1 = makeStyles(theme => ({
   root: {
@@ -130,7 +131,8 @@ export default function CustomPaginationActionsTable() {
       memberList: state.accountReducer.memberList
     };
   }; 
-
+  
+   
   //connect(mapStateToProps)(CustomPaginationActionsTable);
 
   const state = store.getState()
@@ -149,9 +151,16 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
+  //var objUiForm = MaterialUiFormData({array: Object, anyTouched: false, asyncValidate: false});
+
   const loadNow = (row) => {
     //his.props.parentObj(row)
     //this.parentObj.loadData(row)
+    //alert('adf')
+    //objUiForm.loadNow()
+    //var x = store.getState()
+    //var y =   x.accountReducer.personInfo.person
+    store.dispatch({type: "EDIT_POST", personInfo: row})
   }
 
   return (
