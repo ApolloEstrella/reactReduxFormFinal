@@ -210,7 +210,7 @@ export var MaterialUiFormData = props => {
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <Container maxWidth="sm">
+      <Container>
         <Row>
           <Col>
             <div>
@@ -339,7 +339,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-MaterialUiFormData = connect(mapStateToProps, mapDispatchToProps)(MaterialUiFormData);
+//MaterialUiFormData = connect(mapStateToProps, mapDispatchToProps)(MaterialUiFormData);
 
 // Decorate with reduxForm(). It will read the initialValues prop provided by connect()
 MaterialUiFormData = reduxForm({

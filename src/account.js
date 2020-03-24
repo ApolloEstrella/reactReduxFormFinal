@@ -1,4 +1,4 @@
-import useState from "react-hook-use-state";
+import { ADD_POST, EDIT_POST, DEL_POST } from "./action/actions";
 
 // Quack! This is a duck. https://github.com/erikras/ducks-modular-redux
 const LOAD = "redux-form-examples/account/LOAD";
@@ -20,16 +20,17 @@ const initialState = {
 };
 
 const accountReducer = (state = initialState, action) => {
+  
   if (action.type === LOAD) {
     return { personInfo: action.personInfo, memberList: state.memberList };
   }
 
-  if (action.type === "EDIT_POST") {
-    return { personInfo: action.personInfo, memberList: state.memberList };
+  if (action.type === EDIT_POST) {
+    return { personInfo: action.person, memberList: state.memberList };
   }
 
 
-  if (action.type === "ADD_POST") {
+  if (action.type === ADD_POST) {
     /*  var w = Object.assign({}, state, {
       person: action.person
     });
@@ -68,11 +69,17 @@ const accountReducer = (state = initialState, action) => {
     };*/
   }
 
-  if (action.type === "ADD_LOGIN") {
-    return Object.assign({}, state, {
-      loginModal: action.payload
-    });
-  }
+  
+if (action.type === DEL_POST){
+  var x = {...state,
+    memberList: state.memberList.filter((per) => per.person.id !== action.id)}
+  return {
+    ...state,
+    memberList: state.memberList.filter((per) => per.person.id !== action.id)
+  } 
+
+
+}
 
   return state;
 };

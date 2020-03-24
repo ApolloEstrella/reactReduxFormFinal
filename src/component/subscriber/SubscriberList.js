@@ -15,7 +15,10 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import store from "../../store";
-import MaterialUiFormData from "../subscriber/MaterialUiForm";
+import { editPost, delPost }  from "../../action/actions";
+//import MaterialUiFormData from "../subscriber/MaterialUiForm";
+import { Button } from "@material-ui/core";
+import ResponsiveDialog from "../../shared/dialog/responsiveDialog"
 
 const useStyles1 = makeStyles(theme => ({
   root: {
@@ -130,14 +133,13 @@ export default function CustomPaginationActionsTable() {
       person: state.accountReducer.person,
       memberList: state.accountReducer.memberList
     };
-  }; 
-  
-   
+  };
+
   //connect(mapStateToProps)(CustomPaginationActionsTable);
 
-  const state = store.getState()
- 
-  const rows = state.accountReducer.memberList
+  const state = store.getState();
+
+  const rows = state.accountReducer.memberList;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -153,35 +155,50 @@ export default function CustomPaginationActionsTable() {
 
   //var objUiForm = MaterialUiFormData({array: Object, anyTouched: false, asyncValidate: false});
 
-  const loadNow = (row) => {
+  const loadNow = row => {
     //his.props.parentObj(row)
     //this.parentObj.loadData(row)
     //alert('adf')
     //objUiForm.loadNow()
     //var x = store.getState()
     //var y =   x.accountReducer.personInfo.person
-    store.dispatch({type: "EDIT_POST", personInfo: row})
-  }
+    //store.dispatch({ type: "EDIT_POST", personInfo: row });
+    store.dispatch(editPost(row));
+  };
+
+   const deleteItem = row => {
+    store.dispatch(delPost(row.person.id));
+  };
 
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="custom pagination table">
         <TableBody>
           {(rowsPerPage > 0
-            ? rows.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map(row => (
-            <TableRow key={row.person.id} onClick={() => loadNow(row)}>
-            <TableCell component="th" scope="row">
+            <TableRow key={row.person.id}>
+              <TableCell component="th" scope="row">
                 {row.person.id}
               </TableCell>
               <TableCell component="th" scope="row">
                 {row.person.firstName}
               </TableCell>
               <TableCell align="right">{row.person.lastName}</TableCell>
+              <TableCell component="th" scope="row">
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => loadNow(row)}
+                >
+                  Edit
+                </Button>
+              </TableCell>
+              <TableCell component="th" scope="row">
+                <ResponsiveDialog triggerParentUpdate={() => deleteItem(row)} />
+              </TableCell>
             </TableRow>
           ))}
 

@@ -1,44 +1,45 @@
-import React from "react";
+import React, {  Fragment } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import MaterialUiForm from "../subscriber/MaterialUiForm";
-import SubscriberList from "../subscriber/SubscriberList";
+import MaterialUiForm from "./MaterialUiForm";
+import SubscriberList from "./SubscriberList";
+//import { shouldComponentUpdate } from "react-window";
 
 
  
 
  class Subscriber extends React.Component {
 
-  componentDidMount() {
-    setInterval(() => {
+  componentDidMount() { 
+     setInterval(() => {
         this.setState(() => {
             console.log('setting state');
             return { unseen: "does not display" }
         });
-    }, 10);
+    }, 100);  
 }
  
-  shouldComponentUpdate(nextProps: any) {
+  shouldComponentUpdate(nextProps: any, nextState: any) {
     return true;
 }
 
   render() {
     return (
-      <div>
+      <Fragment>
         <Container>
           <Row>
             <Col sm={3}>
               <div>
-                <MaterialUiForm />
+                <MaterialUiForm key="A" />
               </div>
             </Col>
             <Col sm={9}>
               <div>
-                <SubscriberList />
+                <SubscriberList key="B" />
               </div>
             </Col>
           </Row>
         </Container>
-      </div>
+      </Fragment>
     );
   }
 } 
