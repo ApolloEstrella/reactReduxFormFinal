@@ -1,6 +1,6 @@
 import React from "react";
 import useState from "react-hook-use-state";
-import { Field, reduxForm, Form, submit, reset } from "redux-form";
+import { Field, reduxForm, Form, submit, reset, initialize } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -21,13 +21,14 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle"; */
 
 import { connect } from "react-redux";
-import { addPost, ADD_POST } from "../../action/actions";
+import { addPost, ADD_POST, editPost, editSave, addMode } from "../../action/actions";
 /* import { createStore } from "./store";
 import submitNow from "./submit";
 import accountReducer from "./account"; */
 import { load as loadAccount } from "../../account";
 
 import { Container, Row, Col } from "react-bootstrap";
+import store from "../../store";
 
 //import PropTypes from "prop-types";
 //import { makeStyles } from "@material-ui/core/styles";
@@ -44,7 +45,6 @@ import ListItemText from "@material-ui/core/ListItemText";
   },
 })); */
 
-import Subscriber from "../subscriber/SubscriberList";
 
 const required = value =>
   value || typeof value === "number" ? undefined : "Required";
@@ -195,35 +195,42 @@ export var MaterialUiFormData = props => {
         person: values         
       }
     }); */
-
-    dispatch(addPost(values));
+    const state = store.getState();
+    if (state.accountReducer.addMode) dispatch(addPost(values.person));
+    else {
+      dispatch(editSave(values.person));
+      handleFormReset()
+    }
   };
 
   //alert(props.person.firstName)
 
-   const loadData = mem => {
+  const loadData = mem => {
     dispatch(reset("initializeFromState"));
     load(mem);
   };
 
-  //const class2 = useStyles();
+  const handleFormReset = () => {
+    //dispatch(initialize("initializeFromState", {}));
+    dispatch(reset("initializeFromState"));
+    dispatch(addMode(true))
+  };
 
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form
+      name="initializeFromState"
+      id="initializeFromState"
+      onSubmit={handleSubmit(submit)}
+    >
       <Container>
         <Row>
           <Col>
             <div>
-              <div>
-                <button type="button" onClick={() => loadData(member)}>
-                  Load Account
-                </button>
-              </div>
               <Field
                 id="person[id]"
                 name="person[id]"
                 component={renderTextField}
-                label="id"
+                type="hidden"
               />
             </div>
             <div>
@@ -311,8 +318,8 @@ export var MaterialUiFormData = props => {
               &nbsp; &nbsp;
               <Button
                 type="button"
-                disabled={pristine || submitting}
-                onClick={reset}
+                //disabled={pristine || submitting}
+                onClick={() => handleFormReset()}
                 variant="contained"
                 color="primary"
               >
@@ -339,18 +346,25 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-//MaterialUiFormData = connect(mapStateToProps, mapDispatchToProps)(MaterialUiFormData);
+MaterialUiFormData = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MaterialUiFormData);
+
+const afterSubmit = (result, dispatch) =>
+  dispatch(reset("initializeFromState"));
 
 // Decorate with reduxForm(). It will read the initialValues prop provided by connect()
 MaterialUiFormData = reduxForm({
   form: "initializeFromState", // a unique identifier for this form
-  enableReinitialize: true
+  enableReinitialize: true,
+  onSubmitSuccess: afterSubmit
 })(MaterialUiFormData);
 
 // You have to connect() to any reducers that you wish to connect to yourself
 MaterialUiFormData = connect(
   state => ({
-    initialValues: state.accountReducer.personInfo // pull initial values from account reducer
+    initialValues: state.accountReducer.person // pull initial values from account reducer
   }),
   { load: loadAccount } // bind account loading action creator
 )(MaterialUiFormData);

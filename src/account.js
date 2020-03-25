@@ -1,4 +1,4 @@
-import { ADD_POST, EDIT_POST, DEL_POST } from "./action/actions";
+import { ADD_POST, EDIT_POST, DEL_POST, ADD_MODE, EDIT_SAVE } from "./action/actions";
 
 // Quack! This is a duck. https://github.com/erikras/ducks-modular-redux
 const LOAD = "redux-form-examples/account/LOAD";
@@ -16,7 +16,8 @@ const initialState = {
     notes: ""
   },
   memberList: [],
-  counterId: 0
+  counterId: 0,
+  addMode: true
 };
 
 const accountReducer = (state = initialState, action) => {
@@ -26,7 +27,22 @@ const accountReducer = (state = initialState, action) => {
   }
 
   if (action.type === EDIT_POST) {
-    return { personInfo: action.person, memberList: state.memberList };
+
+    //const index = state.memberList.findIndex(member => member.id === action.person.id)
+    
+
+    //state.memberList[index] = action.person
+
+    return { person: action.person, memberList: state.memberList, addMode: false };
+  }
+
+  if (action.type === EDIT_SAVE) {
+
+    const index = state.memberList.findIndex(member => member.id === action.person.id)
+
+    state.memberList[index] = action.person
+
+    return { personInfo: action.person, memberList: state.memberList, addMode: false };
   }
 
 
@@ -45,7 +61,7 @@ const accountReducer = (state = initialState, action) => {
       }
     }; 
 */
-    var member = {person: { ...action.person.person, id: action.counterId }};
+    var member = {...action.person, id: action.counterId };
 
     return Object.assign({}, state, {
       memberList: state.memberList.concat(member)
@@ -72,13 +88,18 @@ const accountReducer = (state = initialState, action) => {
   
 if (action.type === DEL_POST){
   var x = {...state,
-    memberList: state.memberList.filter((per) => per.person.id !== action.id)}
+    memberList: state.memberList.filter((person) => person.id !== action.id)}
   return {
     ...state,
-    memberList: state.memberList.filter((per) => per.person.id !== action.id)
+    memberList: state.memberList.filter((person) => person.id !== action.id)
   } 
+}
 
-
+if (action.type === ADD_MODE) {
+  return { 
+   ...state,
+   addMode: action.addMode
+  }
 }
 
   return state;

@@ -15,10 +15,15 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import store from "../../store";
-import { editPost, delPost }  from "../../action/actions";
+
 //import MaterialUiFormData from "../subscriber/MaterialUiForm";
 import { Button } from "@material-ui/core";
 import ResponsiveDialog from "../../shared/dialog/responsiveDialog"
+import { reset, initialize } from "redux-form";
+
+import {MaterialUiFormData} from "../../component/subscriber/MaterialUiForm"
+import { editPost, delPost, addMode }  from "../../action/actions";
+
 
 const useStyles1 = makeStyles(theme => ({
   root: {
@@ -163,11 +168,15 @@ export default function CustomPaginationActionsTable() {
     //var x = store.getState()
     //var y =   x.accountReducer.personInfo.person
     //store.dispatch({ type: "EDIT_POST", personInfo: row });
-    store.dispatch(editPost(row));
+    store.dispatch(addMode(false))
+    store.dispatch(editPost({person: row}));
+    //store.dispatch(initialize("initializeFromState", {}))
   };
 
    const deleteItem = row => {
-    store.dispatch(delPost(row.person.id));
+    store.dispatch(delPost(row.id));
+    //store.dispatch(reset("initializeFromState"))
+    //store.dispatch(initialize("initializeFromState", {}))
   };
 
   return (
@@ -178,14 +187,14 @@ export default function CustomPaginationActionsTable() {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map(row => (
-            <TableRow key={row.person.id}>
+            <TableRow key={row.id}>
               <TableCell component="th" scope="row">
-                {row.person.id}
+                {row.id}
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.person.firstName}
+                {row.firstName}
               </TableCell>
-              <TableCell align="right">{row.person.lastName}</TableCell>
+              <TableCell align="right">{row.lastName}</TableCell>
               <TableCell component="th" scope="row">
                 <Button
                   type="button"
