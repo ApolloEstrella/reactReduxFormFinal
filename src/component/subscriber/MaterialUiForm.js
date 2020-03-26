@@ -211,8 +211,8 @@ export var MaterialUiFormData = props => {
   };
 
   const handleFormReset = () => {
-    //dispatch(initialize("initializeFromState", {}));
-    dispatch(reset("initializeFromState"));
+    dispatch(initialize("initializeFromState", {}));
+    //dispatch(reset("initializeFromState"));
     dispatch(addMode(true))
   };
 
@@ -358,7 +358,9 @@ const afterSubmit = (result, dispatch) =>
 MaterialUiFormData = reduxForm({
   form: "initializeFromState", // a unique identifier for this form
   enableReinitialize: true,
-  onSubmitSuccess: afterSubmit
+  onSubmitSuccess: afterSubmit,
+  destroyOnUnmount: false,
+  keepDirtyOnReinitialize: true
 })(MaterialUiFormData);
 
 // You have to connect() to any reducers that you wish to connect to yourself

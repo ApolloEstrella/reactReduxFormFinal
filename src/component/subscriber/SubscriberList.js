@@ -176,7 +176,8 @@ export default function CustomPaginationActionsTable() {
    const deleteItem = row => {
     store.dispatch(delPost(row.id));
     //store.dispatch(reset("initializeFromState"))
-    //store.dispatch(initialize("initializeFromState", {}))
+    store.dispatch(initialize("initializeFromState", {}))
+    store.dispatch(addMode(true))
   };
 
   return (
